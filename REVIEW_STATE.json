@@ -1,0 +1,9 @@
+{
+  "status": "refined",
+  "last_review": "2026-06-23",
+  "last_refine": "2026-06-24T12:10:12",
+  "active_idea": "TACE",
+  "stage": "workflow-1.5-complete",
+  "next_action": "/run-experiment B0",
+  "notes": "Project initialized 2026-06-23. Phase 4 review (GPT-5.4) verdict: GO-WITH-CHANGES. research-refine-pipeline run on 2026-06-24 with locked inputs Q5=max_t T(t), Q6=ILP cap 16x4 (Voxel cross-check 32x8), Q7=train-on-3/test-on-1 4-fold. All 12 mandatory pre-submission changes covered by FINAL_PROPOSAL.md and EXPERIMENT_PLAN.md. Verdict READY for experiment execution starting at B0 (pre-flight inventory)."
+}

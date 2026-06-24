@@ -1,0 +1,4 @@
+# Machine-local Claude configuration and absolute symlinks.
+.claude/settings.local.json
+.claude/skills/
+.aris/tools
