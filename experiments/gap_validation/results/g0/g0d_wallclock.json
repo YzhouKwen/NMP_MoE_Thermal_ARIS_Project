@@ -1,0 +1,12 @@
+{
+  "n_steps": 1000,
+  "sampling_intvl_s": 0.001,
+  "wallclock_s": 93.43022108078003,
+  "wallclock_target_s": 180.0,
+  "returncode": 0,
+  "stderr_tail": "Computing steady-state temperatures...\n",
+  "peak_c_final": 48.98000000000002,
+  "peak_c_max_over_run": 49.48000000000002,
+  "n_columns_in_ttrace": 64,
+  "passed": true
+}

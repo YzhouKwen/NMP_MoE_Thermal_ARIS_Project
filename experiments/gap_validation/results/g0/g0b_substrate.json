@@ -1,0 +1,32 @@
+{
+  "lcf": "/home/liudy/workspace/dev/projects/NMP_MoE_Thermal_ARIS_Project/experiments/gap_validation/results/g0/stack/stack.lcf",
+  "ptrace": "/home/liudy/workspace/dev/projects/NMP_MoE_Thermal_ARIS_Project/experiments/gap_validation/results/g0/stack/uniform.ptrace",
+  "n_blocks_in_ptrace": 64,
+  "expected_silicon_blocks": 64,
+  "stack": {
+    "die_size_m": [
+      0.008,
+      0.008
+    ],
+    "n_tiers": 4,
+    "stack_height_m": 0.00066,
+    "silicon_thickness_m": 0.00015,
+    "tim_thickness_m": 2e-05
+  },
+  "die_size_m": [
+    0.008,
+    0.008
+  ],
+  "stack_height_m": 0.00066,
+  "first_blocks": [
+    "B_t0_b00",
+    "B_t0_b01",
+    "B_t0_b02",
+    "B_t0_b03",
+    "B_t0_b04",
+    "B_t0_b05",
+    "B_t0_b06",
+    "B_t0_b07"
+  ],
+  "passed": true
+}

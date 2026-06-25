@@ -1,0 +1,138 @@
+{
+  "timeline": {
+    "started_at": "2026-06-25T06:37:23.407052Z",
+    "finished_at": "2026-06-25T06:39:00.867234Z"
+  },
+  "verdict": {
+    "g0a_passed": false,
+    "g0b_passed": true,
+    "g0c_passed": true,
+    "g0d_passed": true,
+    "all_passed": false
+  },
+  "results": {
+    "g0a": {
+      "ok": true,
+      "passed": false,
+      "min_requests_per_family": 500,
+      "n_families_passing": 2,
+      "family_pass": {
+        "chat": true,
+        "code": false,
+        "math": false,
+        "multilingual": true
+      },
+      "matrix": {
+        "Qwen/Qwen3-235B-A22B-FP8": {
+          "chat": 0,
+          "code": 479,
+          "math": 30,
+          "multilingual": 9205
+        },
+        "cognitivecomputations/DeepSeek-R1-AWQ": {
+          "chat": 0,
+          "code": 440,
+          "math": 30,
+          "multilingual": 9670
+        },
+        "meta-llama/Llama-4-Maverick-17B-128E-Instruct": {
+          "chat": 9999,
+          "code": 479,
+          "math": 30,
+          "multilingual": 14042
+        },
+        "moonshotai/Kimi-K2-Thinking": {
+          "chat": 0,
+          "code": 479,
+          "math": 30,
+          "multilingual": 3000
+        }
+      },
+      "bench_totals": {
+        "mmlu": 51627,
+        "mmlu_ZH_CN": 27897,
+        "hellaswag": 9999,
+        "Chinese-SimpleQA": 8020,
+        "livecodebench": 1877,
+        "HuggingFaceH4": 120
+      },
+      "models": [
+        "Qwen/Qwen3-235B-A22B-FP8",
+        "cognitivecomputations/DeepSeek-R1-AWQ",
+        "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+        "moonshotai/Kimi-K2-Thinking"
+      ],
+      "families": [
+        "chat",
+        "code",
+        "math",
+        "multilingual"
+      ],
+      "note": "File listing is public; file contents are gated and require huggingface-cli login + dataset access acceptance for G1."
+    },
+    "g0b": {
+      "lcf": "/home/liudy/workspace/dev/projects/NMP_MoE_Thermal_ARIS_Project/experiments/gap_validation/results/g0/stack/stack.lcf",
+      "ptrace": "/home/liudy/workspace/dev/projects/NMP_MoE_Thermal_ARIS_Project/experiments/gap_validation/results/g0/stack/uniform.ptrace",
+      "n_blocks_in_ptrace": 64,
+      "expected_silicon_blocks": 64,
+      "stack": {
+        "die_size_m": [
+          0.008,
+          0.008
+        ],
+        "n_tiers": 4,
+        "stack_height_m": 0.00066,
+        "silicon_thickness_m": 0.00015,
+        "tim_thickness_m": 2e-05
+      },
+      "die_size_m": [
+        0.008,
+        0.008
+      ],
+      "stack_height_m": 0.00066,
+      "first_blocks": [
+        "B_t0_b00",
+        "B_t0_b01",
+        "B_t0_b02",
+        "B_t0_b03",
+        "B_t0_b04",
+        "B_t0_b05",
+        "B_t0_b06",
+        "B_t0_b07"
+      ],
+      "passed": true
+    },
+    "g0c": {
+      "wallclock_s": 0.32137298583984375,
+      "returncode": 0,
+      "stderr_tail": "Computing steady-state temperatures...\n",
+      "stdout_tail": "Parsing input files...\nCreating thermal circuit...\nSimulation complete.\n",
+      "peak_c": 47.920000000000016,
+      "peak_block": "layer_0_B_t0_b05",
+      "tier_means_c": {
+        "0": 47.8725,
+        "1": 47.710000000000036,
+        "2": 47.38499999999999,
+        "3": 46.900000000000034
+      },
+      "checks": {
+        "all_above_ambient": true,
+        "monotone_vertical_gradient": true,
+        "peak_in_sane_range_45_200_C": true
+      },
+      "passed": true
+    },
+    "g0d": {
+      "n_steps": 1000,
+      "sampling_intvl_s": 0.001,
+      "wallclock_s": 93.43022108078003,
+      "wallclock_target_s": 180.0,
+      "returncode": 0,
+      "stderr_tail": "Computing steady-state temperatures...\n",
+      "peak_c_final": 48.98000000000002,
+      "peak_c_max_over_run": 49.48000000000002,
+      "n_columns_in_ttrace": 64,
+      "passed": true
+    }
+  }
+}

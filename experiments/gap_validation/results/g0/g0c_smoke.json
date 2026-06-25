@@ -1,0 +1,20 @@
+{
+  "wallclock_s": 0.32137298583984375,
+  "returncode": 0,
+  "stderr_tail": "Computing steady-state temperatures...\n",
+  "stdout_tail": "Parsing input files...\nCreating thermal circuit...\nSimulation complete.\n",
+  "peak_c": 47.920000000000016,
+  "peak_block": "layer_0_B_t0_b05",
+  "tier_means_c": {
+    "0": 47.8725,
+    "1": 47.710000000000036,
+    "2": 47.38499999999999,
+    "3": 46.900000000000034
+  },
+  "checks": {
+    "all_above_ambient": true,
+    "monotone_vertical_gradient": true,
+    "peak_in_sane_range_45_200_C": true
+  },
+  "passed": true
+}

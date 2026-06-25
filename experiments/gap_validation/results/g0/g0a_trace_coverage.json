@@ -1,0 +1,59 @@
+{
+  "ok": true,
+  "passed": false,
+  "min_requests_per_family": 500,
+  "n_families_passing": 2,
+  "family_pass": {
+    "chat": true,
+    "code": false,
+    "math": false,
+    "multilingual": true
+  },
+  "matrix": {
+    "Qwen/Qwen3-235B-A22B-FP8": {
+      "chat": 0,
+      "code": 479,
+      "math": 30,
+      "multilingual": 9205
+    },
+    "cognitivecomputations/DeepSeek-R1-AWQ": {
+      "chat": 0,
+      "code": 440,
+      "math": 30,
+      "multilingual": 9670
+    },
+    "meta-llama/Llama-4-Maverick-17B-128E-Instruct": {
+      "chat": 9999,
+      "code": 479,
+      "math": 30,
+      "multilingual": 14042
+    },
+    "moonshotai/Kimi-K2-Thinking": {
+      "chat": 0,
+      "code": 479,
+      "math": 30,
+      "multilingual": 3000
+    }
+  },
+  "bench_totals": {
+    "mmlu": 51627,
+    "mmlu_ZH_CN": 27897,
+    "hellaswag": 9999,
+    "Chinese-SimpleQA": 8020,
+    "livecodebench": 1877,
+    "HuggingFaceH4": 120
+  },
+  "models": [
+    "Qwen/Qwen3-235B-A22B-FP8",
+    "cognitivecomputations/DeepSeek-R1-AWQ",
+    "meta-llama/Llama-4-Maverick-17B-128E-Instruct",
+    "moonshotai/Kimi-K2-Thinking"
+  ],
+  "families": [
+    "chat",
+    "code",
+    "math",
+    "multilingual"
+  ],
+  "note": "File listing is public; file contents are gated and require huggingface-cli login + dataset access acceptance for G1."
+}

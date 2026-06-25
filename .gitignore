@@ -2,3 +2,5 @@
 .claude/settings.local.json
 .claude/skills/
 .aris/tools
+
+experiments/gap_validation/external/HotSpot/

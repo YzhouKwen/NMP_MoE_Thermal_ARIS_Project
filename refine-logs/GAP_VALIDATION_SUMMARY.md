@@ -1,6 +1,6 @@
 # Gap Validation Summary — Decision Sheet
 
-**Status**: not-started  
+**Status**: G0 complete (conditional pass) — 2026-06-25; awaiting two user decisions before G1
 **Owner stage**: pre-method validation
 
 ## Questions this summary must answer
@@ -43,10 +43,18 @@ Choose exactly one after `G4`:
 
 ## Evidence Checklist
 
-- G0 passed:
-- G1 passed:
+- G0 passed: **conditional** (simulator path PROVEN — g0b/c/d; trace coverage gate FAILS as specified — only 2/4 families ≥ 500 reqs). Detailed verdict and per-check artifacts in `GAP_VALIDATION_RESULTS.md` § G0.
+- G1 passed: pending (blocked on two user decisions — see below)
 - G2 passed:
 - G3 passed:
+
+## G0 provisional verdict (2026-06-25)
+
+- **Simulator infrastructure**: ready. HotSpot 6.0 vendored, 3D-stack `.lcf` validated, steady-state ≈ 0.3 s / placement, transient 1 s @ 1 ms ≈ 93 s ≤ 180 s target. G1/G2/G3 are computationally feasible on the locked substrate (4 tiers × 16 banks).
+- **Trace coverage**: HF dataset listing is sufficient to map (model × task-family) request counts. Result: `chat` and `multilingual` pass ≥ 500; `code` is marginal (479); `math` (MATH-500) is unusable at 30 reqs/model. English `mmlu` totals 51 627 reqs and is a viable 4th-family substitute.
+- **Recommended verdict**: **conditional pass** — infrastructure does not block G1, but the 4-family grid as originally specified does. Two decisions are needed before G1 launches:
+  1. Task-family grid revision: (a) drop math, add English `mmlu`; or (b) drop math + code, run 2-family; or (c) relax threshold to 100 reqs/family. Recommend (a).
+  2. HuggingFace dataset access: accept gated terms + set `HF_TOKEN` for the venv. Required for G1 to read trace contents (G0 only needed the listing).
 
 ## Recommended follow-up if TACE proceeds
 
