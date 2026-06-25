@@ -20,3 +20,6 @@
 | 2026-06-24 12:10 | research-refine-pipeline | refine-logs/EXPERIMENT_TRACKER.md | implementation | latest copy |
 | 2026-06-24 12:10 | research-refine-pipeline | refine-logs/PIPELINE_SUMMARY_20260624_121012.md | implementation | Pipeline complete; verdict READY; first runs B0/B1/B2 unlock M0–M2 gates |
 | 2026-06-24 12:10 | research-refine-pipeline | refine-logs/PIPELINE_SUMMARY.md | implementation | latest copy |
+| 2026-06-24 15:xx | manual refinement | refine-logs/GAP_VALIDATION_PLAN.md | pre-method-validation | hypothesis-first gap-validation plan to test whether current NMP-native MoE placements leave a real thermal gap before committing to TACE-first framing |
+| 2026-06-24 15:xx | manual refinement | refine-logs/GAP_VALIDATION_RESULTS.md | pre-method-validation | append-only results template for G0–G4 gap-validation blocks |
+| 2026-06-24 15:xx | manual refinement | refine-logs/GAP_VALIDATION_SUMMARY.md | pre-method-validation | decision sheet: proceed to TACE vs characterization-first vs stop-and-rescope |

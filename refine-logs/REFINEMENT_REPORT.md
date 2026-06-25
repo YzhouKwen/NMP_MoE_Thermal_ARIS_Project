@@ -34,9 +34,9 @@ GPT-5.4's Phase 4 review flagged five of these as submission blockers.
 
 ## Dominant Contribution — Sharpened
 
-**Before:** "co-activation-aware thermal expert placement." Reviewer translation: "TACG with a thermal cost."
+**Before:** "co-activation-aware thermal expert placement." Reviewer translation: "unclear relation to current NMP placements; possibly TACG with a thermal cost."
 
-**After:** "**Anti-clustering** of high-correlation experts under the anisotropic 3D thermal kernel, with a direct-T objective, refuted against a same-substrate TACG port." Reviewer translation: "TACG and TACE use the same signal in opposite directions; we measure the sign flip and show TACG-port makes hotspots worse."
+**After:** "**Anti-clustering** of high-correlation experts under the anisotropic 3D thermal kernel, with a direct-T objective, shown to close the thermal gap left by current NMP-native MoE placements; TACG-port is retained only as a same-substrate opposite-sign control." Reviewer translation: "current NMP placements are not thermal objectives; TACE fixes that gap, and a TACG-style control sharpens the sign-flip argument."
 
 The sharpening is operational: a same-substrate experiment can falsify or confirm the sign-flip claim. CATEP's original framing did not expose a falsifiable refutation.
 

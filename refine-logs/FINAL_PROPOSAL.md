@@ -17,19 +17,20 @@ The bottleneck is **not** token-Gini, not expert-Gini, and not communication: it
 
 ## 2. Final Method Thesis
 
-**Thesis (one sentence).** *Anti-cluster high-power, high-correlation experts under the anisotropic 3D thermal kernel — by solving a QAP whose objective is a direct max_t T(t) surrogate, not an eigenvalue proxy — and the dominant 3D-NMP MoE hotspot disappears at sub-1°C TPOT cost.*
+**Thesis (one sentence).** *Existing NMP-oriented MoE placements optimize access, communication, and utilization, but leave a measurable thermal gap on 3D-stacked substrates; anti-clustering high-power, high-correlation experts under the anisotropic 3D thermal kernel — by solving a QAP whose objective is a direct max_t T(t) surrogate, not an eigenvalue proxy — closes that gap at sub-1°C TPOT cost.*
 
-The thesis is a single mechanism (anti-clustering placement), under a single substrate (3D-NMP, HBM-PIM bank/tier model), with a single objective (direct thermal surrogate), validated against a single critical baseline (TACG ported to the same substrate, which **clusters** co-activated experts — i.e., does the exact opposite of what is wanted).
+The thesis is a single mechanism (anti-clustering placement), under a single substrate (3D-NMP, HBM-PIM bank/tier model), with a single objective (direct thermal surrogate), validated first against **NMP-native placement baselines** (even-odd, access-likelihood tiering, frequency-driven placement) and second against a **transferred communication-centric control** (TACG ported to the same substrate).
 
 ## 3. Dominant Contribution
 
-**TACE = QAP formulation + direct-T objective + same-substrate TACG-port refutation.**
+**TACE = QAP formulation + direct-T objective + thermal-gap proof against NMP-native placements.**
 
 The contribution is not "first thermal-aware MoE placement" (NeuroTAP, Tasa, Stratum, TACG all touch part of this). The contribution is:
 
-1. **The anti-clustering insight**: the *only* prior work that uses MoE co-activation (TACG) clusters experts to minimize communication. On 3D-NMP under thermal cost, that same signal should drive the opposite assignment. We prove the sign flip experimentally on the same trace data.
-2. **The direct-T objective**: prior thermal-aware placement uses frequency (NeuroTAP) or eigenvalue proxies (λ_max(P)). We replace these with `max_t T(t)` predicted by a fast RC/Green's-function evaluator that runs inside the QAP solver — peak T is what gets capped, peak T is what we minimize.
-3. **The QAP three-term decomposition**: long-run rate · anti-clustering on co-activation graph weighted by anisotropic 3D thermal kernel · lateral/vertical coupling penalty — each ablatable, each empirically justified by Section 4 characterization.
+1. **The thermal-gap insight**: current NMP-oriented MoE placement rules — even-odd spreading, access-likelihood tiering, frequency-only placement, and hybrid parallel mappings — are not thermal objectives. On 3D-NMP, they leave a measurable peak-T and thermal-cap throughput gap. The paper proves this gap before proposing the fix.
+2. **The anti-clustering insight**: co-activation is not inherently a placement "attract" signal. Under thermal cost on 3D-NMP, that same signal should drive the opposite assignment. A transferred TACG-port is retained only as an opposite-sign control, not as the domain's primary baseline.
+3. **The direct-T objective**: prior thermal-aware placement uses frequency (NeuroTAP) or eigenvalue proxies (λ_max(P)). We replace these with `max_t T(t)` predicted by a fast RC/Green's-function evaluator that runs inside the QAP solver — peak T is what gets capped, peak T is what we minimize.
+4. **The QAP three-term decomposition**: long-run rate · anti-clustering on co-activation graph weighted by anisotropic 3D thermal kernel · lateral/vertical coupling penalty — each ablatable, each empirically justified by Section 4 characterization.
 
 ## 4. Intentionally Rejected Complexity
 
@@ -107,9 +108,16 @@ The correlation between Form A and Form B is a measurable property — its value
 
 **Compute budget.** One offline solve per task family. Target ≤ 5 min wall-clock SA on a single CPU node at 64 experts × 16 sites. ILP at 16×4 closes in seconds to a minute. Voxel cross-check at 32×8 may not close in ILP — that is acceptable; gap reported as upper-bound.
 
-## 6. The Critical Baseline: TACG-Port
+## 6. Baseline Strategy: NMP-Native First, TACG-Port as a Transferred Control
 
-The single most important comparison in the paper is **TACG-ported-to-3D-NMP**. TACG (2606.01007) was published May 2026 and uses co-activation grouping on distributed GPU with a *communication* objective — it packs co-activated experts on the same device to minimize cross-device traffic. The danger to TACE is that a reviewer asks "isn't TACE just TACG with a different cost function?" The answer must be a same-substrate, same-trace, same-implementation comparison.
+The paper's **primary baseline family** is not TACG. It is the set of placement/mapping rules that are actually natural for current NMP/PIM MoE systems:
+
+- **Even-odd / spread placement** (A3D-MoE-style): reduce HBM access concentration
+- **Access-likelihood tiering** (Stratum-style): place by predicted access/use rate across tiers
+- **Frequency-driven thermal-blind placement** (NeuroTAP-style): high-rate experts on cooler sites, but no pairwise co-burst awareness
+- **Hybrid mapping / execution partition proxies** (HD-MoE / Sieve family): execution-first mappings projected onto placement
+
+The paper's first responsibility is to show that these **reasonable, performance-driven NMP choices leave a thermal gap**. TACG-port is retained as a **transferred communication-centric control**: same co-activation signal, opposite placement direction, same substrate. It is informative, but it is not the field's accepted NMP baseline.
 
 ### 6.1 TACG-Port Algorithm (precise)
 
@@ -134,7 +142,7 @@ VERIFICATION:
   - Report communication cost on a 3D-NMP NoC model to confirm TACG-port still wins on its native metric
 ```
 
-This is the **centerpiece refutation**: same input, same substrate, opposite assignment principle, opposite thermal outcome. The paper's headline result is a scatter plot with peak T on one axis and communication cost on the other, with TACG-port and TACE on opposite ends of the Pareto front, and the operating point (thermal cap binding) clearly inside TACE's region.
+This is the **opposite-sign control**, not the sole centerpiece: same input, same substrate, opposite assignment principle, opposite thermal outcome. The paper's headline thermal-gap result should first show that **NMP-native placements are thermally suboptimal**; the TACG-port scatter then sharpens the sign-flip argument on top of that result.
 
 ## 7. Substrate, Traces, and Power Model
 
@@ -162,7 +170,7 @@ Six-arm comparison; all run on the **same trace, same substrate, same power mode
 | 2 | Even-odd | HD-MoE, A3D-MoE | Round-robin across banks/tiers by expert index |
 | 3 | NeuroTAP-style | TACO 2024 | Frequency-driven placement: high-`p_e` experts on cooler sites; no co-activation, no kernel |
 | 4 | Stratum-style | 2510.05245 | Tier-by-access-likelihood; ignores horizontal layout, ignores thermal |
-| 5 | **TACG-port** | 2606.01007 | §6.1 — co-activation **clustering**, opposite of TACE |
+| 5 | **TACG-port** | 2606.01007 | §6.1 — transferred communication-centric control using co-activation **clustering**, opposite of TACE |
 | 6 | **TACE (ours)** | this paper | §5 — co-activation **anti-clustering** + direct T-surrogate |
 
 ## 9. Claims and Hypotheses
@@ -172,7 +180,7 @@ The paper makes exactly three claims, in order of importance:
 | # | Claim | Quantitative form |
 |---|-------|-------------------|
 | **C1** | Token-balance ≠ thermal-balance (Section 4 hook) | Under LPR-balanced routing (token Gini ≤ 0.05), bank-activity Gini ≥ 0.30 and ΔT_peak vs vanilla < 1 °C, on at least 3 of 4 task families |
-| **C2** | TACE reduces peak temperature against every baseline including TACG-port | Peak T reduction: 4–7 °C vs random/even-odd · 2–4 °C vs NeuroTAP · 1–3 °C vs Stratum · **2–5 °C vs TACG-port**. Each delta passes a paired bootstrap test (B = 1000, p < 0.05) on the held-out task family |
+| **C2** | TACE closes the thermal gap left by NMP-native placements | Peak T reduction: 4–7 °C vs random/even-odd · 2–4 °C vs NeuroTAP · 1–3 °C vs Stratum. TACG-port is reported as an opposite-sign control and is expected to be thermally worse than TACE, but it is not the sole load-bearing delta. Each NMP-native delta passes a paired bootstrap test (B = 1000, p < 0.05) on the held-out task family |
 | **C3** | Thermal wins translate to end-to-end serving wins under a thermal cap | 1.3–1.8× throughput at fixed T_cap · 30–60% fewer throttle events · ≤ 1 °C average TPOT increase (i.e., placement-induced latency cost is bounded) |
 
 These three claims are the only things the paper promises. Everything else is supporting evidence.
@@ -182,7 +190,7 @@ These three claims are the only things the paper promises. Everything else is su
 | Ablation | Purpose |
 |----------|---------|
 | A1: Remove long-run rate term (set δ = 0) | Long-run rate matters even without pairs |
-| A2: Remove pair co-activation term (set γ = 0) | Pair term is what TACG-port doesn't have; confirms TACG-port refutation isn't just "we have a better rate term" |
+| A2: Remove pair co-activation term (set γ = 0) | Confirms the thermal-gap closure is not just a better long-run-rate heuristic |
 | A3: Replace anisotropic K with isotropic K | Kernel anisotropy matters; isotropic placement should not catch vertical coupling |
 | A4: Remove firebreak ring (FB = ∅) | Firebreak is optional; ablation tells us when it helps |
 | A5: Replace direct-T surrogate (Form A) with λ_max(P) | The eigenvalue proxy is empirically inferior, not just theoretically |
@@ -193,7 +201,7 @@ These three claims are the only things the paper promises. Everything else is su
 
 | Risk | Likelihood | Mitigation |
 |------|-----------|------------|
-| TACG-port survives port well enough to compress the win below 2 °C | MED | Sweep substrate anisotropy (vertical/lateral R ratio); report TACG-port-vs-TACE delta as a function of anisotropy — even if delta shrinks, the *sign* of TACG-port's thermal harm is the load-bearing finding |
+| TACG-port survives port well enough to compress the win below 2 °C | MED | Acceptable if NMP-native baselines still show a clear thermal gap. Sweep substrate anisotropy (vertical/lateral R ratio); report TACG-port-vs-TACE as a secondary sign-flip control, not the sole headline |
 | Anti-clustering improves T but hurts TPOT under thermal cap (C3 fails) | MED | Add a TPOT-aware constraint to the QAP as one ablation row; if TPOT cost > 1 °C, report Pareto rather than dominance and reframe C3 as "joint Pareto improvement" |
 | Form A surrogate poorly correlates with Form B peak T | LOW-MED | B1 calibrates correlation; if < 0.85, tune weights by ridge regression against CoMeT-measured peak T on a calibration trace fold |
 | Public trace dataset 2510.05497 does not include all 4 task families per model | LOW | Pre-flight inventory in B0; if a (model, family) cell is empty, drop that cell from the 4×4 grid and adjust domain-shift folds |
@@ -208,7 +216,7 @@ These three claims are the only things the paper promises. Everything else is su
 | 1 | Single paper, no atlas split | §2, §3, §5 — Atlas is Section 4 of this same paper, not a separate contribution |
 | 2 | Recast as anti-clustering | §2 thesis, §3 contribution, §5.3 sign of γ |
 | 3 | Direct T-surrogate (replace λ_max) | §5.3 Form A + §10 A5 ablation against λ_max |
-| 4 | TACG-port baseline is centerpiece | §6 — full algorithm spec; §8 baseline #5; §9 C2 quantitative delta |
+| 4 | TACG-port retained as transferred opposite-sign control | §6 — full algorithm spec; §8 baseline #5; §9 C2 secondary control |
 | 5 | Mandatory baselines beyond TACG-port | §8 — 6-arm table includes Stratum-style, NeuroTAP, random, even-odd |
 | 6 | Per-term ablations | §10 — A1–A4 cover each objective term + firebreak |
 | 7 | E2E serving metrics under thermal cap | §9 C3 — TPOT, throughput, throttle events |

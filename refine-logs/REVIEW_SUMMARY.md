@@ -7,7 +7,7 @@
 ## Reviewer's Core Concerns (paraphrased)
 
 1. **Eigenvalue surrogate is wrong physics.** `min Σ_t λ_max(P(t))` is not peak T. Replace with a direct prediction (`max_t T(t)` or thresholded equivalent) computed from the same RC/Green's-function model the rest of the paper relies on.
-2. **TACG is the natural reviewer attack.** May 2026's TACG paper uses the same co-activation signal CATEP relied on, but in the opposite direction (clustering for communication minimization). Without a same-substrate TACG port, the paper reads as "TACG with a different cost function." Same-substrate, same-trace, same-implementation comparison is non-negotiable.
+2. **The paper must distinguish NMP-native baselines from transferred controls.** TACG is useful because it uses the same co-activation signal in the opposite direction, but it is not a published 3D-NMP MoE placement baseline. The paper should first prove a thermal gap in current NMP-oriented placements, then use TACG-port as a same-substrate transferred control.
 3. **Atlas as a standalone paper is weak.** Public trace + open simulator = "profiling + replay." Inside a bundled paper, it becomes the empirical justification for TACE's term structure — that is its proper home.
 4. **Static placement attracts a drift attack.** A reviewer will ask "what happens when the workload distribution shifts?" Pre-empt with explicit train-on-X / test-on-Y folds.
 5. **Thermal-only wins are insufficient.** Peak T reduction without TPOT, throughput, and throttle-event evidence is reviewer-bait. The paper must operate the system under a thermal cap and report end-to-end serving deltas.
@@ -19,7 +19,7 @@
 | Reviewer concern | TACE's response (where in FINAL_PROPOSAL.md) |
 |------------------|-----------------------------------------------|
 | 1. Eigenvalue surrogate | §5.3 Form A (direct surrogate inside QAP) + Form B (CoMeT verification at acceptance). §10 A5 ablates direct-T vs λ_max so the choice is empirically defended. |
-| 2. TACG-port baseline | §6 spells out a faithful TACG port — METIS partition, top-r replication, column-balanced assignment. §8 baseline #5. §9 C2 quantitative delta (2–5 °C). Headline figure is the TACG-port-vs-TACE Pareto scatter. |
+| 2. NMP-native baselines first, TACG-port second | §6 reframes baseline strategy: A3D/Stratum/NeuroTAP-style baselines are the primary thermal-gap targets; TACG-port is retained as a faithful transferred control, not the sole headline baseline. |
 | 3. Atlas as Section 4 | §2/§3/§9 C1 — Atlas is not branded as a separate contribution; its job is to derive the term structure that §5 uses. |
 | 4. Drift attack | Q7 train-on-3/test-on-1 4-fold protocol. §11 reviewer-attack row pre-declares the attack and its mitigation. |
 | 5. E2E serving metrics | §9 C3 — TPOT, throughput, throttle events under thermal cap. Promoted to the third (not optional) claim. |
@@ -45,7 +45,7 @@
 
 ## Remaining Reviewer-Exposed Weaknesses (acknowledged in §11)
 
-- **TACG-port may compress the win** if substrate anisotropy is small. Mitigated by reporting the win as a function of anisotropy rather than a single number.
+- **Transferred controls such as TACG-port may compress the win** if substrate anisotropy is small. Mitigated by reporting the win as a function of anisotropy rather than a single number; this does not overturn a thermal gap against NMP-native baselines.
 - **TPOT cost may exceed 1 °C** on the most clustered task family. Mitigated by reframing C3 as Pareto if needed and surfacing this as a finding rather than hiding it.
 - **Voxel may disagree with CoMeT.** Mitigated by predeclaring the agreement criterion before the cross-check runs.
 

@@ -16,7 +16,7 @@
 | Claim | Importance | Minimum convincing evidence | Experiment blocks |
 |-------|-----------|------------------------------|--------------------|
 | **C1** Token-balance ≠ thermal-balance | Section 4 hook — without it the paper has no motivation | Token Gini ≤ 0.05 + bank-activity Gini ≥ 0.30 + ΔT_peak vs vanilla < 1 °C on ≥ 3/4 task families | B2 |
-| **C2** TACE reduces peak T vs every baseline including TACG-port | Headline result — the contribution | Paired bootstrap (B=1000, p<0.05) deltas: 4–7 °C vs random/even-odd · 2–4 °C vs NeuroTAP · 1–3 °C vs Stratum · **2–5 °C vs TACG-port**, on held-out family | B3, B4 |
+| **C2** TACE closes the thermal gap left by NMP-native placements | Headline result — the contribution | Paired bootstrap (B=1000, p<0.05) deltas: 4–7 °C vs random/even-odd · 2–4 °C vs NeuroTAP · 1–3 °C vs Stratum, on held-out family. TACG-port is included as a transferred opposite-sign control, not the sole load-bearing delta | B3, B4 |
 | **C3** Thermal wins translate to E2E serving wins | Publishability — peak T alone is reviewer-bait | 1.3–1.8× throughput at fixed T_cap, 30–60% fewer throttle events, ≤ 1 °C avg TPOT increase | B5 |
 
 ## Experiment Blocks
@@ -37,19 +37,19 @@
 - **Priority**: must run before B3 onward
 - **Budget**: 1 day
 
-### B2 — Section 4 hook: token-balance ≠ thermal-balance (C1)
+### B2 — Section 4 hook: existing MoE balancing/mapping leaves a thermal gap (C1)
 - **Validates**: C1
-- **Method**: replay each task family's trace under (i) vanilla expert routing, (ii) LPR-balanced routing (2506.21328), (iii) aux-loss-free balanced routing (2408.15664); for each, compute token Gini, expert-activity Gini, bank-activity Gini under a fixed reference placement, and CoMeT peak T
+- **Method**: replay each task family's trace under (i) vanilla expert routing, (ii) LPR-balanced routing (2506.21328), (iii) aux-loss-free balanced routing (2408.15664); then evaluate several representative NMP-style placements under a fixed substrate: even-odd, frequency-driven, and access-likelihood tiering. For each, compute token Gini, expert-activity Gini, bank-activity Gini, and CoMeT peak T.
 - **Success criterion (predeclared)**: on ≥ 3/4 task families, LPR yields token Gini ≤ 0.05 *and* bank-activity Gini ≥ 0.30 *and* peak T delta vs vanilla < 1 °C
-- **Outputs**: 4×3 table (family × routing scheme) of (token Gini, bank Gini, ΔT) · Section 4 headline figure
+- **Outputs**: 4×3 routing table plus a placement-side thermal-gap table showing that balanced or performance-driven expert placements still leave elevated bank Gini / peak T · Section 4 headline figure
 - **Priority**: must run
 - **Budget**: 1–2 days
 
 ### B3 — Main 6-arm thermal comparison (C2 core)
 - **Validates**: C2 — the headline result
 - **Method**: for each of the 4 task families and each baseline in `FINAL_PROPOSAL.md` §8 (random, even-odd, NeuroTAP-style, Stratum-style, TACG-port, TACE), produce an assignment using that baseline's algorithm, replay the family's full trace, evaluate Form B (CoMeT peak T over trace). 10 seeds for random. 4-fold Q7 domain shift: train on 3 families, test on 1.
-- **Outputs**: 4 (held-out family) × 6 (baselines) × n_seeds peak T matrix; paired bootstrap test (B=1000) for each baseline-vs-TACE delta on the held-out family; headline TACG-port vs TACE scatter (peak T vs communication cost)
-- **Success criterion (predeclared)**: paired deltas in §9 C2 hold with p < 0.05 after Bonferroni correction over 5 pairwise comparisons; **TACG-port loses by ≥ 2 °C on ≥ 3/4 held-out families**
+- **Outputs**: 4 (held-out family) × 6 (baselines) × n_seeds peak T matrix; paired bootstrap test (B=1000) for each baseline-vs-TACE delta on the held-out family; primary figure = NMP-native thermal-gap comparison; secondary figure = TACG-port vs TACE scatter (peak T vs communication cost)
+- **Success criterion (predeclared)**: paired deltas in §9 C2 hold with p < 0.05 after Bonferroni correction over 5 pairwise comparisons for the NMP-native baselines (random/even-odd, NeuroTAP-style, Stratum-style). TACG-port is expected to be thermally worse than TACE, but tie/noise there does not nullify C2 if the NMP-native gap is clear.
 - **Priority**: must run
 - **Budget**: 3–5 days
 
@@ -63,9 +63,9 @@
 
 ### B5 — Thermal-cap E2E serving (C3)
 - **Validates**: C3 — the publishability claim
-- **Method**: pick the best 3 placements from B3 (TACG-port, NeuroTAP-style, TACE); run a closed-loop serving simulator (CoMeT transient + simple throttle controller; throttle triggers when CoMeT-predicted T ≥ T_cap; throughput = served tokens / wall-clock) on each task family for ≥ 30 s wall-clock per condition; sweep T_cap ∈ {85, 90, 95} °C
+- **Method**: pick the best 3 placements from B3 (strongest NMP-native baseline, NeuroTAP-style if distinct, TACE; TACG-port optional as a fourth row if its communication tradeoff is worth showing); run a closed-loop serving simulator (CoMeT transient + simple throttle controller; throttle triggers when CoMeT-predicted T ≥ T_cap; throughput = served tokens / wall-clock) on each task family for ≥ 30 s wall-clock per condition; sweep T_cap ∈ {85, 90, 95} °C
 - **Outputs**: per-T_cap throughput, throttle event count, average TPOT, P99 TPOT, time-above-threshold
-- **Success criterion (predeclared)**: TACE beats TACG-port and NeuroTAP-style on throughput by ≥ 1.3× at T_cap = 90 °C; throttle event count down ≥ 30%; avg TPOT delta ≤ 1 °C-worth (≈ ≤ 5% TPOT increase)
+- **Success criterion (predeclared)**: TACE beats the strongest NMP-native baseline on throughput by ≥ 1.3× at T_cap = 90 °C; throttle event count down ≥ 30%; avg TPOT delta ≤ 1 °C-worth (≈ ≤ 5% TPOT increase)
 - **If C3 fails**: reframe C3 as joint Pareto improvement rather than dominance — `FINAL_PROPOSAL.md` §11 risk
 - **Priority**: must run
 - **Budget**: 3–5 days
@@ -80,7 +80,7 @@
 
 ### B7 — CoMeT × Voxel cross-check (substrate credibility)
 - **Validates**: simulator-independence of C2
-- **Method**: pick the held-out family from B3 with the largest TACE-vs-TACG-port delta; rerun the 6-arm comparison using Voxel at 32×8; compare hotspot location (top-3 hottest banks) and peak T delta
+- **Method**: pick the held-out family from B3 with the clearest TACE-vs-NMP-native-baseline thermal gap; rerun the 6-arm comparison using Voxel at 32×8; compare hotspot location (top-3 hottest banks) and peak T delta
 - **Success criterion (predeclared)**: ≥ 3 of 4 (model, family) cells agree on top-3 hottest bank set with Jaccard ≥ 0.67; peak T deltas agree within ±15% in magnitude and *match sign*
 - **If disagreement > criterion**: report as a limitation rather than retraction; investigate kernel anisotropy differences
 - **Priority**: must run
@@ -88,15 +88,15 @@
 
 ### B8 — Parameter sweeps (robustness)
 - **Validates**: C2/C3 robustness
-- **Method**: sweep each axis at ≥ 3 points, all on one anchor task family with TACE vs TACG-port and NeuroTAP-style:
+- **Method**: sweep each axis at ≥ 3 points, all on one anchor task family with TACE vs the strongest NMP-native baseline, plus TACG-port as optional control:
   - Anisotropy ratio R_v / R_l ∈ {0.5×, 1×, 2× of CoMeT default}
   - Ambient T ∈ {35, 45, 55} °C
   - Stack height n_T ∈ {4, 6, 8}
   - Burstiness (sliding-window size for c_{ef}) ∈ {0.5τ, 1τ, 2τ}
   - Thermal threshold T_cap ∈ {85, 90, 95} °C (already covered in B5; reused here)
   - q_e scale ∈ {0.5×, 1×, 2×} (power-model sensitivity)
-- **Outputs**: per-axis trend lines; identification of the axis on which TACG-port closes the gap (anti-fragility evidence)
-- **Success criterion (predeclared)**: TACE-vs-TACG-port delta stays positive (TACE wins) across ≥ 80% of swept points; identify the closing point on the anisotropy axis
+- **Outputs**: per-axis trend lines; identification of the axis on which the NMP-native thermal gap narrows or widens; TACG-port, if shown, is secondary sign-flip evidence
+- **Success criterion (predeclared)**: TACE-vs-strongest-NMP-native-baseline delta stays positive across ≥ 80% of swept points
 - **Priority**: must run (sweeps are mandatory pre-submission change #11)
 - **Budget**: 2–3 days
 
@@ -113,8 +113,8 @@
 |-----------|------|-----------|--------------------|------------------------|
 | **M0** | Infrastructure ready | B0 | Trace coverage and simulators usable; if not, scope reduction needed | 0.5–1 day |
 | **M1** | Surrogate is faithful | B1 | corr(A, B) ≥ 0.85, or ridge-refit accepted; otherwise stop and reformulate Form A | 1 day |
-| **M2** | C1 holds | B2 | LPR token Gini ≤ 0.05 *and* bank Gini ≥ 0.30 *and* ΔT < 1 °C on ≥ 3/4 families. If not, Section 4 hook fails — reconsider paper framing | 1–2 days |
-| **M3** | C2 holds | B3 + B4 + B6 | TACE beats TACG-port by ≥ 2 °C on ≥ 3/4 families with p < 0.05 (after Bonferroni); per-term ablations bite; ILP gap ≤ 3%. If TACG-port wins on any family, debug port faithfulness, then escalate to §11 risk and consider Pareto framing | 6–10 days |
+| **M2** | C1 holds | B2 | Balanced routing / performance-driven placement still leaves bank-level thermal skew or peak-T inflation on ≥ 3/4 families. If not, the Section 4 hook fails and the paper loses its motivation | 1–2 days |
+| **M3** | C2 holds | B3 + B4 + B6 | TACE beats the strongest NMP-native baselines with p < 0.05 (after Bonferroni); per-term ablations bite; ILP gap ≤ 3%. TACG-port may be retained as an auxiliary sign-flip control, but it is not the sole gate | 6–10 days |
 | **M4** | C3 holds | B5 | Throughput ≥ 1.3× and throttle ≥ 30% reduction and TPOT ≤ +5%. If TPOT > +5%, reframe C3 as Pareto | 3–5 days |
 | **M5** | Cross-substrate credibility | B7 + B8 | Voxel agrees on sign and top-3 hotspots; parameter sweeps preserve TACE wins on ≥ 80% of points | 4–5 days |
 | **M6** | Final polish | B9 + writing prep | Firebreak ring decision; commit final claim wordings to paper | 1 day |
@@ -127,7 +127,7 @@
 |------|-----------|---------------------|-------------|
 | Trace inventory has empty cells | LOW | B0 | Drop cell from grid; reduce domain-shift folds to surviving cells |
 | Form A poorly correlates with Form B | LOW-MED | B1 | Ridge refit; if still < 0.85, switch to per-family-trained weights |
-| TACG-port ties TACE on some family | MED | B3 (mid-run) | Confirm port faithfulness via communication-cost check; if port is faithful, report tie + identify anisotropy regime in B8 |
+| TACG-port ties TACE on some family | MED | B3 (mid-run) | Acceptable if the NMP-native thermal gap remains clear; confirm port faithfulness via communication-cost check and report as a secondary control |
 | TPOT cost of anti-clustering > 1 °C-worth | MED | B5 | Reframe C3 as Pareto; surface as finding |
 | Voxel disagrees with CoMeT | MED | B7 | Limitation, not refutation; document kernel-anisotropy delta |
 | ILP doesn't close at 16×4 in 1 hour | LOW | B6 | Best-known-gap as upper bound (still publishable) |
@@ -141,7 +141,7 @@
 | 1 | Single paper, no atlas split | B2 (Section 4 hook in this same paper) |
 | 2 | Anti-clustering recast | B3 (sign of γ in TACE > 0); B4 A2 (pair-term ablation) |
 | 3 | Direct T-surrogate | B1 calibration; B4 A5 (λ_max ablation) |
-| 4 | TACG-port baseline centerpiece | B3 (mandatory arm, headline figure) |
+| 4 | TACG-port retained as transferred opposite-sign control | B3 (mandatory arm, secondary figure) |
 | 5 | Baselines beyond TACG-port | B3 (6 arms incl. random, even-odd, NeuroTAP, Stratum) |
 | 6 | Per-term ablations | B4 (A1–A4 + A5 surrogate + A6/A7 solver) |
 | 7 | E2E serving metrics under thermal cap | B5 |
